@@ -8,10 +8,10 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class FollowServiceMsaApplication {
+public class FollowServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FollowServiceMsaApplication.class, args);
+        SpringApplication.run(FollowServiceApplication.class, args);
     }
 
     @Bean

@@ -13,12 +13,12 @@ public class Follow {
     private Long id;
 
     @Column(name = "from_user_id", nullable = false)
-    private String fromUser;
+    private Long fromUser;
 
     @Column(name = "to_user_id", nullable = false)
-    private String toUser;
+    private Long toUser;
 
-    public static Follow of(String fromUser, String toUser){
+    public static Follow of(Long fromUser, Long toUser){
         Follow follow = new Follow();
         follow.setFromUser(fromUser);
         follow.setToUser(toUser);

@@ -1,19 +1,13 @@
 package com.hanghae.followservice.service;
 
+import com.hanghae.followservice.client.UserServiceClient;
 import com.hanghae.followservice.domain.constant.ErrorCode;
 import com.hanghae.followservice.domain.entity.Follow;
 import com.hanghae.followservice.domain.repository.FollowRepository;
-import com.hanghae.followservice.dto.response.Response;
 import com.hanghae.followservice.exception.FollowServiceApplicationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -21,27 +15,25 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FollowService {
 
-    private final RestTemplate restTemplate;
     private final FollowRepository followRepository;
+    private final UserServiceClient userServiceClient;
 
-    public void follow(String toUser, HttpHeaders headers) {
-        String userAccountUrl = "http://127.0.0.1:8000/user-service/users/email";
+    public void follow(Long toUser, HttpHeaders headers) {
 
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+        /* Using a feign client */
+        Optional<Long> fromUserIdOptional = userServiceClient.getFromUserId(headers);
+        Long fromUser = fromUserIdOptional.orElseThrow(() -> null);
 
-        // USER-SERVICE API 호출하여 이메일 정보 가져오기 유저서비스의 반환타입
-        ResponseEntity<String> userEmailResponse =
-                restTemplate.exchange(userAccountUrl, HttpMethod.GET, entity,
-                        String.class);
+        if (fromUser.equals(toUser)) {
+            throw new FollowServiceApplicationException(ErrorCode.USER_CANNOT_FOLLOW_SELF);
+        }
 
-        String fromUser = userEmailResponse.getBody();
+        Optional<Long> checkToUser = userServiceClient.getToUserId(toUser, headers);
+        checkToUser.orElseThrow(() -> new FollowServiceApplicationException(ErrorCode.USER_NOT_FOUND));
 
         Optional<Follow> existingFollow = followRepository.findByFromUserAndToUser(fromUser, toUser);
-
-        if (existingFollow.isPresent()) {
-            followRepository.delete(existingFollow.get());
-        } else {
-            followRepository.save(Follow.of(fromUser, toUser));
-        }
+        existingFollow.ifPresentOrElse(followRepository::delete,
+                () -> followRepository.save(Follow.of(fromUser, toUser))
+        );
     }
 }

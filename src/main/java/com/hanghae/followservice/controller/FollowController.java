@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/follow-service")
@@ -18,7 +20,7 @@ public class FollowController {
     private final FollowService followService;
 
     @PostMapping("/follow")
-    public Response<Void> follow(FollowRequest request, @RequestHeader HttpHeaders headers) {
+    public Response<Void> follow(FollowRequest request, @RequestHeader HttpHeaders headers){
         followService.follow(request.toUser(), headers);
         return Response.success(null);
     }

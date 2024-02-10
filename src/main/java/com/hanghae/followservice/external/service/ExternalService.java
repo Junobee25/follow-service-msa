@@ -13,8 +13,8 @@ public class ExternalService {
 
     private final FollowRepository followRepository;
 
-    public List<Long> getFollowingUsers(Long fromUser) {
-        return followRepository.findByFromUser(fromUser).stream()
+    public List<Long> getFollowingUsers(Long fromUserId) {
+        return followRepository.findByFromUser(fromUserId).stream()
                 .map(Follow::getToUser)
                 .toList();
     }

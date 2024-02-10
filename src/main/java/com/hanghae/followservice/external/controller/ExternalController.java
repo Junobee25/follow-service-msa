@@ -14,7 +14,7 @@ public class ExternalController {
     private final ExternalService externalService;
 
     @GetMapping("/find-following-user")
-    public List<Long> getFollowingUser(@RequestParam(value = "fromUser", required = false) Long fromUser) {
-        return externalService.getFollowingUsers(fromUser);
+    public List<Long> getFollowingUser(@RequestParam(value = "fromUserId", required = false) Long fromUserId) {
+        return externalService.getFollowingUsers(fromUserId);
     }
 }

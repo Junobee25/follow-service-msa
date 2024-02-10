@@ -1,6 +1,6 @@
 package com.hanghae.followservice.service;
 
-import com.hanghae.followservice.client.UserServiceClient;
+import com.hanghae.followservice.external.client.UserServiceClient;
 import com.hanghae.followservice.domain.constant.ErrorCode;
 import com.hanghae.followservice.domain.entity.Follow;
 import com.hanghae.followservice.domain.repository.FollowRepository;

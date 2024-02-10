@@ -1,4 +1,4 @@
-package com.hanghae.followservice.client;
+package com.hanghae.followservice.external.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;

@@ -1,11 +1,13 @@
 package com.hanghae.followservice.service;
 
+import com.hanghae.followservice.domain.constant.AlarmType;
 import com.hanghae.followservice.external.client.AlarmServiceClient;
 import com.hanghae.followservice.external.client.UserServiceClient;
 import com.hanghae.followservice.domain.constant.ErrorCode;
 import com.hanghae.followservice.domain.entity.Follow;
 import com.hanghae.followservice.domain.repository.FollowRepository;
 import com.hanghae.followservice.exception.FollowServiceApplicationException;
+import com.hanghae.followservice.external.dto.AlarmRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -40,7 +42,7 @@ public class FollowService {
                 followRepository.delete(existingFollow.get());
             } else {
                 followRepository.save(Follow.of(fromUser.get(), toUser));
-                alarmServiceClient.saveAlarm(toUser, fromUser.get(), Follow.of(fromUser.get(), toUser).getId(), "NEW_FOLLOW");
+                alarmServiceClient.saveAlarm(AlarmRequest.of(toUser, fromUser.get(), Follow.of(fromUser.get(), toUser).getId(), AlarmType.NEW_FOLLOW_TO_USER));
             }
         }
     }
